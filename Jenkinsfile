@@ -10,7 +10,7 @@ pipeline {
             post {
                 always {
                     sh 'echo "Test post"'
-                    sh 'docker rm -f httpd'
+                    // sh 'docker rm -f httpd'
                 }
             }
         }
