@@ -3,8 +3,9 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'env'
-                sh 'docker run -d --name httpd -v ${PWD}/httpd.conf:/usr/local/apache2/conf/httpd.conf httpd'
+                sh 'docker create -ti --name httpd -p 8889:80 httpd'
+                sh 'docker cp ${PWD}/httpd.conf httpd:/usr/local/apache2/conf/httpd.conf'
+                sh 'docker start httpd'
             }
             post {
                 always {
