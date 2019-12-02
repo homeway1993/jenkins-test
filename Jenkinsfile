@@ -8,8 +8,10 @@ pipeline {
                 sh 'docker run -d --name httpd -v ${PWD}/httpd.conf:/usr/local/apache2/conf/httpd.conf httpd'
             }
             post {
-                sh 'echo "Test post"'
-                sh 'docker rm -f httpd'
+                always {
+                    sh 'echo "Test post"'
+                    sh 'docker rm -f httpd'
+                }
             }
         }
     }
