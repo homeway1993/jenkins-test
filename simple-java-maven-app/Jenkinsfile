@@ -11,6 +11,7 @@ pipeline {
                     userRemoteConfigs: [[url: 'https://github.com/homeway1993/simple-java-maven-app.git']],
                     branches: [[name: '*/master']]
                 ])
+                sh 'ls -al'
             }
             post {
                 always {
