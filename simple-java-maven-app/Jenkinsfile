@@ -21,13 +21,16 @@ pipeline {
                 }
             }
         }
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'maven:3-alpine'
-        //             args '-v /root/maven/.m2:/root/.m2 -v /root/maven/conf:/usr/share/maven/conf'
-        //         }
-        //     }
-        // }
+        stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v $HOME/docker-volume/maven/.m2:/root/.m2 -v $HOME/docker-volume/maven/conf:/usr/share/maven/conf'
+                }
+            }
+            steps {
+                sh 'mvn -V'
+            }
+        }
     }
 }
