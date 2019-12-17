@@ -1,11 +1,9 @@
 pipeline {
     agent any
     stages {
-        stage('Test') {
+        stage('Checkout') {
             steps {
-                sh 'docker create -ti --name httpd -p 8889:80 httpd'
-                sh 'docker cp ${PWD}/httpd.conf httpd:/usr/local/apache2/conf/httpd.conf'
-                sh 'docker start httpd'
+                sh 'echo hello'
             }
             post {
                 always {
