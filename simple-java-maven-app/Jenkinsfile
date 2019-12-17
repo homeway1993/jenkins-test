@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'echo hello'
+                sh 'echo "hello 1"'
             }
             post {
                 always {
