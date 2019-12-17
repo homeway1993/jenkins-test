@@ -6,7 +6,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'echo "hello 1"'
+                checkout([
+                    $class: 'GitSCM',
+                    userRemoteConfigs: 'https://github.com/homeway1993/simple-java-maven-app.git',
+                    branches: []
+                ])
             }
             post {
                 always {
