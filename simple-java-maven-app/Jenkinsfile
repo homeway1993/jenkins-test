@@ -33,6 +33,7 @@ pipeline {
             steps {
                 dir('checkout-directory') {
                     sh 'ls -al'
+                    sh 'mvn -version'
                     sh 'mvn -B -DskipTests clean package'
                 }
             }
