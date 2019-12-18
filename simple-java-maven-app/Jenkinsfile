@@ -15,7 +15,6 @@ pipeline {
           doGenerateSubmoduleConfigurations: false
         ])
         sh 'ls -al checkout-directory'
-        sh 'echo $PWD'
       }
       post {
         always {
@@ -23,18 +22,34 @@ pipeline {
         }
       }
     }
-    stage('Build') {
+    stage('Build and Test') {
       agent {
         docker {
           image 'maven:3-alpine'
           args '-v $HOME/.m2:/root/.m2 -v /usr/share/maven/conf/settings.xml:/usr/share/maven/conf/settings.xml:ro'
         }
       }
-      steps {
-        dir('checkout-directory') {
-          sh 'ls -al'
-          sh 'mvn -version'
-          sh 'mvn -B -DskipTests clean package'
+      stages {
+        stage('Build') {
+          steps {
+            dir('checkout-directory') {
+              sh 'ls -al'
+              sh 'mvn -version'
+              sh 'mvn -B -DskipTests clean package'
+            }
+          }
+        }
+        stage('Test') {
+          steps {
+            dir('checkout-directory') {
+              sh 'mvn test'
+            }
+          }
+          post {
+            always {
+              junit 'target/surefire-reports/*.xml'
+            }
+          }
         }
       }
     }
