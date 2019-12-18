@@ -1,42 +1,42 @@
 pipeline {
-    agent none
-    triggers {
-        pollSCM('* * * * *')
-    }
-    stages {
-        stage('Checkout') {
-            agent any
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    userRemoteConfigs: [[url: 'https://github.com/homeway1993/simple-java-maven-app.git']],
-                    branches: [[name: '*/master']],
-                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'checkout-directory']],
-                    doGenerateSubmoduleConfigurations: false
-                ])
-                sh 'ls -al checkout-directory'
-                sh 'echo $PWD'
-            }
-            post {
-                always {
-                    sh 'echo "Test post"'
-                }
-            }
+  agent none
+  triggers {
+    pollSCM('* * * * *')
+  }
+  stages {
+    stage('Checkout') {
+      agent any
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          userRemoteConfigs: [[url: 'https://github.com/homeway1993/simple-java-maven-app.git']],
+          branches: [[name: '*/master']],
+          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'checkout-directory']],
+          doGenerateSubmoduleConfigurations: false
+        ])
+        sh 'ls -al checkout-directory'
+        sh 'echo $PWD'
+      }
+      post {
+        always {
+          sh 'echo "Test post"'
         }
-        stage('Build') {
-            agent {
-                docker {
-                    image 'maven:3-alpine'
-                    args '-v $HOME/.m2:/root/.m2 -v /usr/share/maven/conf/settings.xml:/usr/share/maven/conf/settings.xml:ro'
-                }
-            }
-            steps {
-                dir('checkout-directory') {
-                    sh 'ls -al'
-                    sh 'mvn -version'
-                    sh 'mvn -B -DskipTests clean package'
-                }
-            }
-        }
+      }
     }
+    stage('Build') {
+      agent {
+        docker {
+          image 'maven:3-alpine'
+          args '-v $HOME/.m2:/root/.m2 -v /usr/share/maven/conf/settings.xml:/usr/share/maven/conf/settings.xml:ro'
+        }
+      }
+      steps {
+        dir('checkout-directory') {
+          sh 'ls -al'
+          sh 'mvn -version'
+          sh 'mvn -B -DskipTests clean package'
+        }
+      }
+    }
+  }
 }
