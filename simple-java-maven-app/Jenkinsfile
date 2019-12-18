@@ -33,7 +33,7 @@ pipeline {
             steps {
                 dir('checkout-directory') {
                     sh 'ls -al'
-                    sh 'echo $PWD'
+                    sh 'mvn -B -DskipTests clean package'
                 }
             }
         }
