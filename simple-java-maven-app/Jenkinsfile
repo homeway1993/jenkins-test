@@ -25,7 +25,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('checkout-directory') {
-                    sh 'docker run -it --rm --name maven -v $HOME/.m2:/root/.m2 -v /usr/share/maven/conf/settings.xml:/usr/share/maven/conf/settings.xml:ro -v $PWD:/workdir -w /workdir maven:3-alpine mvn -B -DskipTests clean package'
+                    sh 'docker run --rm --name maven -v $HOME/.m2:/root/.m2 -v /usr/share/maven/conf/settings.xml:/usr/share/maven/conf/settings.xml:ro -v $PWD:/workdir -w /workdir maven:3-alpine mvn -B -DskipTests clean package'
                     sh 'ls -al target/'
                 }
             }
