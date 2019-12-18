@@ -30,10 +30,10 @@ pipeline {
                 }
             }
             steps {
-                dir('checkout-directory') {
+                // dir('checkout-directory') {
                     sh 'ls -al'
                     sh 'echo $PWD'
-                }
+                // }
             }
         }
     }
