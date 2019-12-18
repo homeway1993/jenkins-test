@@ -23,15 +23,10 @@ pipeline {
             }
         }
         stage('Build') {
-            agent {
-                docker {
-                    image 'maven:3-alpine'
-                    args '-v $HOME/docker-volume/maven/.m2:/root/.m2 -v $HOME/docker-volume/maven/conf:/usr/share/maven/conf'
-                }
-            }
             steps {
                 dir('checkout-directory') {
-                    sh 'mvn -B -DskipTests clean package'
+                    sh 'docker run -it --rm --name maven -v $HOME/.m2:/root/.m2 -v /usr/share/maven/conf/settings.xml:/usr/share/maven/conf/settings.xml:ro -v $PWD:/workdir -w /workdir maven:3-alpine mvn -B -DskipTests clean package'
+                    sh 'ls -al target/'
                 }
             }
         }
