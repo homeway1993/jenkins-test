@@ -13,7 +13,7 @@ pipeline {
                     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'checkout-directory']],
                     doGenerateSubmoduleConfigurations: false
                 ])
-                sh 'ls -al'
+                sh 'ls -al checkout-directory'
                 sh 'echo $PWD'
             }
             post {
