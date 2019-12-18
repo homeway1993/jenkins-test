@@ -30,7 +30,9 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                dir('checkout-directory') {
+                    sh 'mvn -B -DskipTests clean package'
+                }
             }
         }
     }
