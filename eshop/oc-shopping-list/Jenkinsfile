@@ -10,11 +10,14 @@ pipeline {
 //    ENVIRONMENT = 'develop'
 //    BRANCH = 'omni-channel-phase1'
 //  }
+  triggers {
+    pollSCM('* * * * *')
+  }
   options {
     disableConcurrentBuilds()
   }
-  triggers {
-    pollSCM('* * * * *')
+  tools {
+    jdk 'Java12'
   }
   stages {
     stage('Checkout') {
@@ -61,6 +64,36 @@ pipeline {
           sh "docker cp mongo_data.js mongodb-${SERVICE}-ci:mongo_data.js"
           sh "docker exec mongodb-${SERVICE}-ci mongo mongo_data.js"
         }
+
+        sh "mvn clean package"
+
+        // dir('microservice') {
+        //   script {
+        //     for (String code: Arrays.asList(env.SERVICE.split())) {
+        //       sh """
+        //         cd $code
+				//         export _JAVA_OPTIONS=-Djdk.net.URLClassPath.disableClassPathURLCheck=true
+				//         mvn clean package
+        //         docker build -t $Harbor_Registry/oc_storefront/$code/\$Environment:ci --build-arg ENV=ci --build-arg JAR_FILE=\$( cd target; echo *.jar ) .
+
+				//         docker rm -f eshop-ci-$SERVICE || true
+        //         docker run -d --name eshop-ci-$SERVICE --link eshop_json_server:docker-web --link mongodb-$SERVICE-ci:eshop-$SERVICE-mongodb $Harbor_Registry/oc_storefront/$code/\$Environment:ci			
+				//         sleep 10
+				//         docker rm -f postman-$SERVICE || true
+				//         docker create --name  postman-$SERVICE --link eshop-ci-$SERVICE:eshopci.chowsangsang.com $Harbor_Registry/base-images/newman run '$POSTMAN_NAME'.postman_collection.json
+        //         cd integration-test/postman-scripts/
+        //         docker cp '$POSTMAN_NAME'.postman_collection.json postman-\$SERVICE:/etc/newman/'$POSTMAN_NAME'.postman_collection.json
+				//         sleep 10
+				//         docker start postman-$SERVICE -i
+
+				//         cd ..
+				//         cd validation-db-script
+				//         docker cp 'validation.js' 'mongodb-${SERVICE}-ci:validation.js'
+				//         docker exec mongodb-${SERVICE}-ci mongo validation.js
+        //       """
+        //     }
+        //   }
+        // }
       }
     }
   }
