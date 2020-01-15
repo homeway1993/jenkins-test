@@ -19,6 +19,8 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
+        sh "env"
+        sh "echo $SERVICE"
         checkout([
           $class: 'SubversionSCM',
           additionalCredentials: [],
