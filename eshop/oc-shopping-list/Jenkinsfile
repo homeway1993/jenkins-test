@@ -31,7 +31,7 @@ pipeline {
           includedRegions: '',
           locations: [
             [
-              remote: 'https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${env.SERVICE}/${env.ENVIRONMENT}/${env.BRANCH}',
+              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${env.SERVICE}/${env.ENVIRONMENT}/${env.BRANCH}',
               cancelProcessOnExternalsFail: true,
               credentialsId: 'css_svn',
               depthOption: 'infinity',
@@ -42,7 +42,7 @@ pipeline {
         ])
       }
     }
-    stage('API Test') {
+    stage('Integration Test') {
       steps {
         sh "docker rm -f eshop_json_server || true"
         sh "docker create --name eshop_json_server -p 36880:80 clue/json-server"
