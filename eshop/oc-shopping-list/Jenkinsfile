@@ -19,8 +19,6 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        sh "env"
-        sh "echo $SERVICE"
         checkout([
           $class: 'SubversionSCM',
           additionalCredentials: [],
@@ -33,7 +31,7 @@ pipeline {
           includedRegions: '',
           locations: [
             [
-              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${env.SERVICE}/${env.ENVIRONMENT}/${env.BRANCH}",
+              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/${ENVIRONMENT}/${BRANCH}",
               cancelProcessOnExternalsFail: true,
               credentialsId: 'css_svn',
               depthOption: 'infinity',
