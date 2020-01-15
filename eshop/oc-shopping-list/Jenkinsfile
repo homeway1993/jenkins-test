@@ -36,7 +36,7 @@ pipeline {
               credentialsId: 'css_svn',
               depthOption: 'infinity',
               ignoreExternalsOption: true,
-              local: 'microservice/${SERVICE}'
+              local: "microservice/${SERVICE}"
             ]
           ]
         ])
