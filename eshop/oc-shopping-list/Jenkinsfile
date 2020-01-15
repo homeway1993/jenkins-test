@@ -32,11 +32,11 @@ pipeline {
           locations: [
             [
               remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/${ENVIRONMENT}/${BRANCH}",
-              cancelProcessOnExternalsFail: true,
-              credentialsId: 'css_svn',
+              local: "microservice/${SERVICE}",
               depthOption: 'infinity',
+              credentialsId: 'css_svn',
               ignoreExternalsOption: true,
-              local: "microservice/${SERVICE}"
+              cancelProcessOnExternalsFail: true,
             ]
           ]
         ])
