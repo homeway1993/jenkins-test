@@ -1,15 +1,15 @@
 pipeline {
   agent any
-//  parameters {
-//    string(name: 'SERVICE', defaultValue: 'oc-shopping-list')
-//    string(name: 'ENVIRONMENT', defaultValue: 'develop')
-//    string(name: 'BRANCH', defaultValue: 'omni-channel-phase1')
-//  }
-  environment {
-    SERVICE = 'oc-shopping-list'
-    ENVIRONMENT = 'develop'
-    BRANCH = 'omni-channel-phase1'
+  parameters {
+    string(name: 'SERVICE', defaultValue: 'oc-shopping-list')
+    string(name: 'ENVIRONMENT', defaultValue: 'develop')
+    string(name: 'BRANCH', defaultValue: 'omni-channel-phase1')
   }
+//  environment {
+//    SERVICE = 'oc-shopping-list'
+//    ENVIRONMENT = 'develop'
+//    BRANCH = 'omni-channel-phase1'
+//  }
   options {
     disableConcurrentBuilds()
   }
