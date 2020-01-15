@@ -23,7 +23,7 @@ pipeline {
             [
               remote: 'https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/oc-shopping-list/develop/omni-channel-phase1',
               cancelProcessOnExternalsFail: true,
-              credentialsId: 'svn.oc_storefront',
+              credentialsId: 'css_svn',
               depthOption: 'infinity',
               ignoreExternalsOption: true,
               local: 'microservice/oc-shopping-list'
