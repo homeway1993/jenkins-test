@@ -24,7 +24,7 @@ pipeline {
           includedRegions: '',
           locations: [
             [
-              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/develop/omni-channel-phase1",
+              remote: 'https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/develop/omni-channel-phase1',
               cancelProcessOnExternalsFail: true,
               credentialsId: 'css_svn',
               depthOption: 'infinity',
@@ -35,19 +35,19 @@ pipeline {
         ])
       }
     }
-    stage('API Test') {
-      steps {
-        sh "docker rm -f eshop_json_server || true"
-        sh "docker create --name eshop_json_server -p 36880:80 clue/json-server"
-        sh "sleep 10"
-        dir("microservice/$SERVICE/integration-test/json-server-data/") {
-          sh "docker cp 'db.json' 'eshop_json_server:/data/db.json'"
-          sh "docker cp 'json-server.json' 'eshop_json_server:/data/json-server.json'"
-          sh "docker cp 'middleware-1.js' 'eshop_json_server:/data/middleware-1.js'"
-          sh "docker cp 'routes.json' 'eshop_json_server:/data/routes.json'"
-        }
-        sh "docker start eshop_json_server"
-      }
-    }
+//    stage('API Test') {
+//      steps {
+//        sh "docker rm -f eshop_json_server || true"
+//        sh "docker create --name eshop_json_server -p 36880:80 clue/json-server"
+//        sh "sleep 10"
+//        dir("microservice/${SERVICE}/integration-test/json-server-data/") {
+//          sh "docker cp 'db.json' 'eshop_json_server:/data/db.json'"
+//          sh "docker cp 'json-server.json' 'eshop_json_server:/data/json-server.json'"
+//          sh "docker cp 'middleware-1.js' 'eshop_json_server:/data/middleware-1.js'"
+//          sh "docker cp 'routes.json' 'eshop_json_server:/data/routes.json'"
+//        }
+//        sh "docker start eshop_json_server"
+//      }
+//    }
   }
 }
