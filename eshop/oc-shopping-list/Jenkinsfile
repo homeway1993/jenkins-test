@@ -24,7 +24,7 @@ pipeline {
           includedRegions: '',
           locations: [
             [
-              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/$SERVICE/develop/omni-channel-phase1",
+              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/develop/omni-channel-phase1",
               cancelProcessOnExternalsFail: true,
               credentialsId: 'css_svn',
               depthOption: 'infinity',
