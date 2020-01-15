@@ -31,7 +31,7 @@ pipeline {
           includedRegions: '',
           locations: [
             [
-              remote: 'https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/${ENVIRONMENT}/${BRANCH}',
+              remote: 'https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/' + $SERVICE + '/' + $ENVIRONMENT + '/' $BRANCH,
               cancelProcessOnExternalsFail: true,
               credentialsId: 'css_svn',
               depthOption: 'infinity',
