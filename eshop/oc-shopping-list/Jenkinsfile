@@ -46,7 +46,6 @@ pipeline {
       steps {
         sh "docker rm -f eshop_json_server || true"
         sh "docker create --name eshop_json_server -p 36880:80 clue/json-server"
-        sh "sleep 10"
         dir("microservice/${SERVICE}/integration-test/json-server-data/") {
           sh "docker cp 'db.json' 'eshop_json_server:/data/db.json'"
           sh "docker cp 'json-server.json' 'eshop_json_server:/data/json-server.json'"
