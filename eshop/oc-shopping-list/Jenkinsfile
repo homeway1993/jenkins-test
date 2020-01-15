@@ -26,7 +26,7 @@ pipeline {
               credentialsId: 'svn.oc_storefront',
               depthOption: 'infinity',
               ignoreExternalsOption: true,
-              local: 'microservice/' + env.SERVICE
+              local: 'microservice/oc-shopping-list'
             ]
           ]
         ])
