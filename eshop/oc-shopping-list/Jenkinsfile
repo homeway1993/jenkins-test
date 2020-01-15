@@ -55,7 +55,7 @@ pipeline {
         sh "docker start eshop_json_server"
 
         sh "docker rm -f mongodb-${SERVICE}-ci || true"
-        sh "docker run --name mongodb-${SERVICE}-ci -e NLS_LANG=.AL32UTF8 -d -p 27017:27017 mongo &> /dev/null"
+        sh "docker run --name mongodb-${SERVICE}-ci -d -p 27017:27017 mongo"
         sh "sleep 5"
         dir("microservice/${SERVICE}/integration-test/init-db-scripts/") {
           sh "docker cp mongo_data.js mongodb-${SERVICE}-ci:mongo_data.js"
