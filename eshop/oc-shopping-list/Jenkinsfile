@@ -56,4 +56,9 @@ pipeline {
       }
     }
   }
+  post {
+    always {
+      sh "docker rm -f eshop_json_server || true"
+    }
+  }
 }
