@@ -67,7 +67,7 @@ pipeline {
           sh "docker exec mongodb-${SERVICE}-ci mongo mongo_data.js"
         }
 
-        sh "cp Dockerfile microservice/${SERVICE}/Dockerfile"
+        sh "cp eshop/${SERVICE}/Dockerfile microservice/${SERVICE}/Dockerfile"
 
         dir("microservice/${SERVICE}") {
           sh """
