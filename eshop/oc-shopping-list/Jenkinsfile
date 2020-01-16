@@ -65,7 +65,14 @@ pipeline {
         //   sh "docker exec mongodb-${SERVICE}-ci mongo mongo_data.js"
         // }
 
-        sh "mvn clean package"
+        dir('microservice') {
+          script {
+            sh """
+              cd ${SERVICE}
+              mvn clean package
+            """
+          }
+        }
 
         // dir('microservice') {
         //   script {
