@@ -80,7 +80,7 @@ pipeline {
             sleep 10
 
             docker rm -f postman-${SERVICE} || true
-            docker create --name postman-${SERVICE} --link ${SERVICE}/${ENVIRONMENT}:ci:eshopci.chowsangsang.com ${HARBOR_REGISTRY}/base-images/newman run ${POSTMAN_NAME}.postman_collection.json
+            docker create --name postman-${SERVICE} --link eshop-ci-${SERVICE}:eshopci.chowsangsang.com ${HARBOR_REGISTRY}/base-images/newman run ${POSTMAN_NAME}.postman_collection.json
             cd integration-test/postman-scripts
             docker cp ${POSTMAN_NAME}.postman_collection.json postman-${SERVICE}:/etc/newman/${POSTMAN_NAME}.postman_collection.json
             sleep 10
@@ -126,9 +126,10 @@ pipeline {
   }
   post {
     always {
-      sh "docker rm -f eshop-json-server || true"
-      sh "docker rm -f  mongodb-${SERVICE}-ci || true"
-      sh "docker rm -f postman-${SERVICE}"
+      // sh "docker rm -f eshop-json-server || true"
+      // sh "docker rm -f mongodb-${SERVICE}-ci || true"
+      // sh "docker rm -f eshop-ci-${SERVICE} || true"
+      // sh "docker rm -f postman-${SERVICE} || true"
     }
   }
 }
