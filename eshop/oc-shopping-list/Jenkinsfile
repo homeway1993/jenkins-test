@@ -1,9 +1,9 @@
 pipeline {
   agent any
   parameters {
-    string(name: 'SERVICE', defaultValue: 'oc-shopping-list')
-    string(name: 'ENVIRONMENT', defaultValue: 'develop')
-    string(name: 'BRANCH', defaultValue: 'omni-channel-phase1')
+    string(name: 'SERVICE', defaultValue: 'oc-shopping-list', description: '')
+    string(name: 'ENVIRONMENT', defaultValue: 'develop', description: '')
+    string(name: 'BRANCH', defaultValue: 'omni-channel-phase1', description: '')
   }
 //  environment {
 //    SERVICE = 'oc-shopping-list'
@@ -69,7 +69,7 @@ pipeline {
           script {
             sh """
               cd ${SERVICE}
-              mvn clean package
+              mvn -version
             """
           }
         }
