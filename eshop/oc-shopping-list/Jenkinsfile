@@ -17,7 +17,7 @@ pipeline {
     disableConcurrentBuilds()
   }
   tools {
-    jdk 'Java12'
+    jdk 'OpenJDK12'
   }
   stages {
     stage('Checkout') {
