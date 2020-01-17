@@ -50,7 +50,7 @@ pipeline {
     stage('Integration Test') {
       steps {
         sh "docker rm -f eshop-json-server || true"
-        sh "docker create --name eshop-json-server -p 36880:80 clue/json-server"
+        sh "docker create --name eshop-json-server clue/json-server"
         dir("microservice/${SERVICE}/integration-test/json-server-data/") {
           sh "docker cp 'db.json' 'eshop-json-server:/data/db.json'"
           sh "docker cp 'json-server.json' 'eshop-json-server:/data/json-server.json'"
@@ -60,7 +60,7 @@ pipeline {
         sh "docker start eshop-json-server"
 
         sh "docker rm -f mongodb-${SERVICE}-ci || true"
-        sh "docker run --name mongodb-${SERVICE}-ci -d -p 27017:27017 mongo"
+        sh "docker run --name mongodb-${SERVICE}-ci -d mongo"
         sh "sleep 5"
         dir("microservice/${SERVICE}/integration-test/init-db-scripts/") {
           sh "docker cp mongo_data.js mongodb-${SERVICE}-ci:mongo_data.js"
@@ -124,12 +124,12 @@ pipeline {
       }
     }
   }
-  // post {
-  //   always {
-  //     sh "docker rm -f eshop-json-server || true"
-  //     sh "docker rm -f mongodb-${SERVICE}-ci || true"
-  //     sh "docker rm -f eshop-ci-${SERVICE} || true"
-  //     sh "docker rm -f postman-${SERVICE} || true"
-  //   }
-  // }
+  post {
+    always {
+      sh "docker rm -f eshop-json-server || true"
+      sh "docker rm -f mongodb-${SERVICE}-ci || true"
+      sh "docker rm -f eshop-ci-${SERVICE} || true"
+      sh "docker rm -f postman-${SERVICE} || true"
+    }
+  }
 }
