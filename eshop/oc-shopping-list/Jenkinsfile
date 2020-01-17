@@ -49,6 +49,13 @@ pipeline {
     }
     stage('Integration Test') {
       steps {
+        dir("microservice/${SERVICE}") {
+          sh """
+            mvn -version
+            mvn clean package
+          """
+        }
+
         sh "docker rm -f eshop-json-server || true"
         sh "docker create --name eshop-json-server clue/json-server"
         dir("microservice/${SERVICE}/integration-test/json-server-data/") {
@@ -71,9 +78,6 @@ pipeline {
 
         dir("microservice/${SERVICE}") {
           sh """
-            mvn -version
-            mvn clean package
-
             docker build -t ${SERVICE}/${ENVIRONMENT}:ci --build-arg ENV=ci .
             docker rm -f eshop-ci-${SERVICE} || true
             docker run -d --name eshop-ci-${SERVICE} --link eshop-json-server:docker-web --link mongodb-${SERVICE}-ci:eshop-${SERVICE}-mongodb ${SERVICE}/${ENVIRONMENT}:ci
