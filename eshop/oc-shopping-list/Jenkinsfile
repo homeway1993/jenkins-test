@@ -45,18 +45,11 @@ pipeline {
         ])
       }
     }
-    stage('Unit Test') {
-      steps {
-        dir("microservice/${SERVICE}") {
-          sh "mvn -version"
-          sh "mvn clean test"
-        }
-      }
-    }
     stage('Integration Test') {
       steps {
         dir("microservice/${SERVICE}") {
-          sh "mvn package"
+          sh "mvn -version"
+          sh "mvn clean package"
         }
 
         sh "docker rm -f eshop-json-server || true"
