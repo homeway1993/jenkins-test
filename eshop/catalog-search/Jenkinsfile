@@ -1,0 +1,108 @@
+pipeline {
+  agent any
+  parameters {
+    string(name: 'SERVICE', defaultValue: 'catalog-search', description: '')
+    string(name: 'ENVIRONMENT', defaultValue: 'develop', description: '')
+    string(name: 'BRANCH', defaultValue: 'phase1', description: '')
+  }
+  environment {
+    HARBOR_REGISTRY = 'hkdcvx-harbor.chowsangsang.com'
+    POSTMAN_NAME = 'EShopShoppingListsApiTest'
+  }
+  triggers {
+    pollSCM('* * * * *')
+  }
+  options {
+    disableConcurrentBuilds()
+  }
+  tools {
+    maven 'maven3.6.3'
+    jdk 'OpenJDK12'
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([
+          $class: 'SubversionSCM',
+          additionalCredentials: [],
+          excludedCommitMessages: '',
+          excludedRegions: '',
+          excludedRevprop: '',
+          excludedUsers: '',
+          filterChangelog: false,
+          ignoreDirPropChanges: false,
+          includedRegions: '',
+          locations: [
+            [
+              remote: "https://svn.chowsangsang.com/repos/uat/oc_storefront/microservice/${SERVICE}/${ENVIRONMENT}/${BRANCH}",
+              local: "microservice/${SERVICE}",
+              depthOption: 'infinity',
+              credentialsId: 'css_svn',
+              ignoreExternalsOption: true,
+              cancelProcessOnExternalsFail: true,
+            ]
+          ]
+        ])
+      }
+    }
+    stage('Integration Test') {
+      steps {
+        dir("microservice/${SERVICE}") {
+          sh "mvn -version"
+          sh "mvn clean package"
+        }
+
+        sh "docker rm -f eshop-json-server || true"
+        sh "docker create --name eshop-json-server clue/json-server"
+        dir("microservice/${SERVICE}/integration-test/json-server-data/") {
+          sh "docker cp 'db.json' 'eshop-json-server:/data/db.json'"
+          sh "docker cp 'json-server.json' 'eshop-json-server:/data/json-server.json'"
+          sh "docker cp 'middleware-1.js' 'eshop-json-server:/data/middleware-1.js'"
+          sh "docker cp 'routes.json' 'eshop-json-server:/data/routes.json'"
+        }
+        sh "docker start eshop-json-server"
+
+        sh "docker rm -f mongodb-${SERVICE}-ci || true"
+        sh "docker run --name mongodb-${SERVICE}-ci -d mongo"
+        sh "sleep 5"
+        dir("microservice/${SERVICE}/integration-test/init-db-scripts/") {
+          sh "docker cp mongo_data.js mongodb-${SERVICE}-ci:mongo_data.js"
+          sh "docker exec mongodb-${SERVICE}-ci mongo mongo_data.js"
+        }
+
+        sh "cp eshop/${SERVICE}/Dockerfile microservice/${SERVICE}/Dockerfile"
+
+        dir("microservice/${SERVICE}") {
+          sh """
+            docker build -t ${SERVICE}/${ENVIRONMENT}:ci --build-arg ENV=ci .
+            docker rm -f eshop-ci-${SERVICE} || true
+            docker run -d --name eshop-ci-${SERVICE} --link eshop-json-server:docker-web --link mongodb-${SERVICE}-ci:eshop-${SERVICE}-mongodb ${SERVICE}/${ENVIRONMENT}:ci
+            sleep 10
+
+            docker rm -f postman-${SERVICE} || true
+            docker create --name postman-${SERVICE} --link eshop-ci-${SERVICE}:eshopci.chowsangsang.com ${HARBOR_REGISTRY}/base-images/newman run ${POSTMAN_NAME}.postman_collection.json
+            cd integration-test/postman-scripts
+            docker cp ${POSTMAN_NAME}.postman_collection.json postman-${SERVICE}:/etc/newman/${POSTMAN_NAME}.postman_collection.json
+            sleep 10
+
+            docker start postman-${SERVICE} -i
+
+            cd ..
+            cd validation-db-script
+            docker cp validation.js mongodb-${SERVICE}-ci:validation.js
+            docker exec mongodb-${SERVICE}-ci mongo validation.js
+          """
+        }
+      }
+    }
+  }
+  post {
+    always {
+      sh "docker rm -f eshop-json-server || true"
+      sh "docker rm -f mongodb-${SERVICE}-ci || true"
+      sh "docker rm -f eshop-ci-${SERVICE} || true"
+      sh "docker rm -f postman-${SERVICE} || true"
+      sh "docker rmi -f ${SERVICE}/${ENVIRONMENT}:ci || true"
+    }
+  }
+}
