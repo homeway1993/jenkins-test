@@ -8,9 +8,6 @@ pipeline {
   environment {
     HARBOR_REGISTRY = 'hkdcvx-harbor.chowsangsang.com'
     POSTMAN_NAME = 'EShopShoppingListsApiTest'
-//    SERVICE = 'oc-shopping-list'
-//    ENVIRONMENT = 'develop'
-//    BRANCH = 'omni-channel-phase1'
   }
   triggers {
     pollSCM('* * * * *')
@@ -48,13 +45,18 @@ pipeline {
         ])
       }
     }
+    stage('Unit Test') {
+      steps {
+        dir("microservice/${SERVICE}") {
+          sh "mvn -version"
+          sh "mvn clean test"
+        }
+      }
+    }
     stage('Integration Test') {
       steps {
         dir("microservice/${SERVICE}") {
-          sh """
-            mvn -version
-            mvn clean package
-          """
+          sh "mvn package"
         }
 
         sh "docker rm -f eshop-json-server || true"
@@ -98,34 +100,6 @@ pipeline {
             docker exec mongodb-${SERVICE}-ci mongo validation.js
           """
         }
-
-        // dir('microservice') {
-        //   script {
-        //     for (String code: Arrays.asList(env.SERVICE.split())) {
-        //       sh """
-        //         cd $code
-				//         export _JAVA_OPTIONS=-Djdk.net.URLClassPath.disableClassPathURLCheck=true
-				//         mvn clean package
-        //         docker build -t $Harbor_Registry/oc_storefront/$code/\$Environment:ci --build-arg ENV=ci --build-arg JAR_FILE=\$( cd target; echo *.jar ) .
-
-				//         docker rm -f eshop-ci-$SERVICE || true
-        //         docker run -d --name eshop-ci-$SERVICE --link eshop_json_server:docker-web --link mongodb-$SERVICE-ci:eshop-$SERVICE-mongodb $Harbor_Registry/oc_storefront/$code/\$Environment:ci			
-				//         sleep 10
-				//         docker rm -f postman-$SERVICE || true
-				//         docker create --name  postman-$SERVICE --link eshop-ci-$SERVICE:eshopci.chowsangsang.com $Harbor_Registry/base-images/newman run '$POSTMAN_NAME'.postman_collection.json
-        //         cd integration-test/postman-scripts/
-        //         docker cp '$POSTMAN_NAME'.postman_collection.json postman-\$SERVICE:/etc/newman/'$POSTMAN_NAME'.postman_collection.json
-				//         sleep 10
-				//         docker start postman-$SERVICE -i
-
-				//         cd ..
-				//         cd validation-db-script
-				//         docker cp 'validation.js' 'mongodb-${SERVICE}-ci:validation.js'
-				//         docker exec mongodb-${SERVICE}-ci mongo validation.js
-        //       """
-        //     }
-        //   }
-        // }
       }
     }
   }
@@ -135,6 +109,7 @@ pipeline {
       sh "docker rm -f mongodb-${SERVICE}-ci || true"
       sh "docker rm -f eshop-ci-${SERVICE} || true"
       sh "docker rm -f postman-${SERVICE} || true"
+      sh "docker rmi -f ${SERVICE}/${ENVIRONMENT}:ci || true"
     }
   }
 }
