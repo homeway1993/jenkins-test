@@ -112,5 +112,8 @@ pipeline {
 
       recordIssues(enabledForFailure: true, tools: [checkStyle(), findBugs(useRankAsPriority: true), pmd()])
     }
+    success {
+      jacoco()
+    }
   }
 }
