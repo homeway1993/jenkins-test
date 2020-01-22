@@ -112,11 +112,17 @@ pipeline {
 
       fingerprint '**/*.jar'
       jacoco()
-      recordIssues(aggregatingResults: false, enabledForFailure: true, tools: [
-        checkStyle(),
-        findBugs(useRankAsPriority: true),
-        pmd()
-      ])
+      script {
+        try {
+          recordIssues(enabledForFailure: true, tools: [
+            checkStyle(),
+            findBugs(useRankAsPriority: true),
+            pmd()
+          ])
+        } catch(err) {
+          echo err
+        }
+      }
     }
   }
 }
