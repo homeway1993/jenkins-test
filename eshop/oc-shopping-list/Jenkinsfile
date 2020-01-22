@@ -110,7 +110,7 @@ pipeline {
       sh "docker rm -f postman-${SERVICE} || true"
       sh "docker rmi -f ${SERVICE}/${ENVIRONMENT}:ci || true"
 
-      recordIssues(enabledForFailure: true, tools: [findBugs(useRankAsPriority: true), pmd()])
+      recordIssues(enabledForFailure: true, tools: [checkStyle(), findBugs(useRankAsPriority: true), pmd()])
     }
   }
 }
