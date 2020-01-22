@@ -112,7 +112,11 @@ pipeline {
 
       fingerprint '**/*.jar'
       jacoco()
-      recordIssues(enabledForFailure: true, tools: [checkStyle(), findBugs(useRankAsPriority: true), pmd()])
+      recordIssues(enabledForFailure: true, tools: [
+        checkStyle(),
+        findBugs(pattern: '**/findbugs*.xml', useRankAsPriority: true),
+        pmd()
+      ])
     }
   }
 }
