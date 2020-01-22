@@ -110,8 +110,6 @@ pipeline {
       sh "docker rm -f postman-${SERVICE} || true"
       sh "docker rmi -f ${SERVICE}/${ENVIRONMENT}:ci || true"
 
-      fingerprint '**/*.jar'
-      jacoco()
       script {
         try {
           recordIssues(enabledForFailure: true, tools: [
@@ -120,9 +118,13 @@ pipeline {
             pmd()
           ])
         } catch(err) {
-          echo "Failed: ${err}"
+          echo "Catched: ${err}"
         }
       }
+    }
+    success {
+      jacoco()
+      fingerprint '**/*.jar'
     }
   }
 }
