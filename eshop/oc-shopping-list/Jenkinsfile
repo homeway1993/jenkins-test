@@ -120,6 +120,7 @@ pipeline {
         } catch(err) {
           echo "Catched: ${err}"
         }
+        
       }
     }
     success {
