@@ -120,7 +120,7 @@ pipeline {
             pmd()
           ])
         } catch(err) {
-          echo err
+          echo "Failed: ${err}"
         }
       }
     }
