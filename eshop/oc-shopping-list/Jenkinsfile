@@ -18,7 +18,7 @@ pipeline {
   }
   tools {
     maven 'maven3.6.3'
-    jdk 'OpenJDK12'
+    // jdk 'OpenJDK12'
   }
   stages {
     stage('Checkout') {
