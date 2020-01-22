@@ -103,6 +103,8 @@ pipeline {
       sh "docker rm -f eshop-ci-${SERVICE} || true"
       sh "docker rm -f postman-${SERVICE} || true"
       sh "docker rmi -f ${SERVICE}/${ENVIRONMENT}:ci || true"
+
+      recordIssues(enabledForFailure: true, tools: [checkStyle(), findBugs(useRankAsPriority: true), pmd()])
     }
   }
 }
