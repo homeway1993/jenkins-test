@@ -115,7 +115,7 @@ pipeline {
       recordIssues(enabledForFailure: true, tools: [
         // checkStyle(),
         // findBugs(useRankAsPriority: true),
-        // pmd()
+        pmd()
       ])
     }
   }
