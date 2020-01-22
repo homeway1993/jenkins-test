@@ -4,6 +4,7 @@ pipeline {
     string(name: 'SERVICE', defaultValue: 'oc-shopping-list', description: '')
     string(name: 'ENVIRONMENT', defaultValue: 'develop', description: '')
     string(name: 'BRANCH', defaultValue: 'omni-channel-phase1', description: '')
+    booleanParam(name: 'RUN_TEST', defaultValue: true, description: '')
   }
   environment {
     HARBOR_REGISTRY = 'hkdcvx-harbor.chowsangsang.com'
@@ -46,6 +47,11 @@ pipeline {
       }
     }
     stage('Integration Test') {
+      when {
+        expression {
+          return params.RUN_TEST
+        }
+      }
       steps {
         dir("microservice/${SERVICE}") {
           sh "mvn -version"
