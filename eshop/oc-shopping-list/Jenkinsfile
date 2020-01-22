@@ -114,7 +114,7 @@ pipeline {
       jacoco()
       recordIssues(enabledForFailure: true, tools: [
         checkStyle(),
-        findBugs(pattern: '**/findbugs*.xml', useRankAsPriority: true),
+        // findBugs(useRankAsPriority: true),
         pmd()
       ])
     }
