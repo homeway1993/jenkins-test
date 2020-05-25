@@ -1,0 +1,18 @@
+pipeline {
+  agent any
+  options {
+    disableConcurrentBuilds()
+  }
+  environment {
+    DOCKER_TLS_VERIFY = '1'
+    DOCKER_HOST = 'tcp://192.168.99.119:2376'
+    DOCKER_CERT_PATH = '/var/jenkins_home/minikube'
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        sh "docker images"
+      }
+    }
+  }
+}
